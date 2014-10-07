@@ -1,4 +1,6 @@
 <resources>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="result_image_size">80dp</dimen>
+    <dimen name="result_item_padding">10dp</dimen>
 </resources>

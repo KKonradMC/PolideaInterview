@@ -61,14 +61,34 @@ public class SearchResultActivityTest extends ActivityInstrumentationTestCase2<S
         mSolo.clickOnButton(message);
 
         if(isOnline()) {
+            mSolo.waitForActivity(ResultListActivity_.class);
+            mSolo.assertCurrentActivity("Wrong activity", ResultListActivity_.class);
+            mSolo.sleep(2000);
+            mSolo.clickInList(2);
+
+            mSolo.waitForActivity(QuestionDetailsActivity_.class);
+            mSolo.sleep(2000);
+            mSolo.assertCurrentActivity("Wrong activity", QuestionDetailsActivity_.class);
+
+            final String appName = getActivity().getString(R.string.app_name);
+            mSolo.clickOnMenuItem(appName);
+            mSolo.sleep(2000);
+            mSolo.assertCurrentActivity("Wrong activity", ResultListActivity_.class);
+
+            mSolo.clickOnMenuItem(appName);
+            mSolo.sleep(2000);
+            mSolo.assertCurrentActivity("Wrong activity", SearchActivity_.class);
 
         }else{
             final String errorMessage = getActivity().getString(R.string.sth_was_wrong);
             mSolo.waitForText(errorMessage);
-            mSolo.assertCurrentActivity("Wrong activity", SearchActivity_.class);
+            mSolo.assertCurrentActivity("Wrong activity", ResultListActivity_.class);
         }
+
+
         mSolo.sleep(2000);
     }
+
 
     private boolean isOnline() {
         final ConnectivityManager cm =

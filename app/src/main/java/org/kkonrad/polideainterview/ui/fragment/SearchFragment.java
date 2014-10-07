@@ -21,6 +21,7 @@ import org.androidannotations.api.rest.RestErrorHandler;
 import org.kkonrad.polideainterview.R;
 import org.kkonrad.polideainterview.model.QuestionList;
 import org.kkonrad.polideainterview.rest.SearchRestClient;
+import org.kkonrad.polideainterview.ui.activity.ResultListActivity_;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.web.client.RestClientException;
 
@@ -50,7 +51,6 @@ public class SearchFragment extends Fragment {
     @AfterInject
     protected void setErrorHandler(){
         mSearchRestClient.setRestErrorHandler(new RestErrorHandler() {
-
             @Override
             public void onRestClientExceptionThrown(NestedRuntimeException e) {
                 Timber.e(e, "Rest error :");
@@ -73,12 +73,24 @@ public class SearchFragment extends Fragment {
     protected void searchOnStackOverFlow(String searchText){
         final QuestionList questionList = mSearchRestClient.getPostsByTitle(searchText);
         if(questionList != null && questionList.countItems() != 0) {
-            Timber.i("QuestionList object:", questionList.toString());
+            displayResult(questionList, searchText);
         }else {
             saveShowToastInUiThread(R.string.empty_result);
         }
     }
 
+    @UiThread
+    protected void displayResult(QuestionList questionList, String  searchWord){
+        final Activity activity = getActivity();
+        if(activity != null && !activity.isFinishing()) {
+            final Intent intent = new Intent(getActivity(), ResultListActivity_.class);
+            final Bundle bundle = new Bundle();
+            bundle.putString(ResultListFragment.SEARCH_WORD, searchWord);
+            bundle.putParcelable(ResultListFragment.QUESTION_LIST, questionList);
+            intent.putExtra(ResultListFragment.FRAGMENT_ARGS, bundle);
+            startActivity(intent);
+        }
+    }
 
     private void saveShowToastInUiThread(int messageRes){
         final Activity activity = getActivity();
@@ -110,5 +122,3 @@ public class SearchFragment extends Fragment {
         }
     }
 }
-
-

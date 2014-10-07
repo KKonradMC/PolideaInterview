@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:gravity="center_vertical"
+              android:padding="@dimen/result_item_padding"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="@dimen/result_image_size"
+        android:layout_height="@dimen/result_image_size"
+        android:id="@+id/avatar_image"
+        android:layout_marginRight="@dimen/result_item_padding"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/count_answer"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:singleLine="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/author"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_toEndOf="@id/avatar_image"
+        android:layout_toStartOf="@id/count_answer"
+        android:layout_alignParentTop="true"
+        android:singleLine="true"
+        android:ellipsize="end"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/post_title"
+        android:layout_toEndOf="@id/avatar_image"
+        android:layout_alignBottom="@id/avatar_image"
+        android:textStyle="bold|italic"
+        android:maxLines="3"
+        android:ellipsize="end"/>
+</RelativeLayout>
