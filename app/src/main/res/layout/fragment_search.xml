@@ -17,6 +17,8 @@
         android:id="@+id/search_field"
         android:layout_alignBottom="@id/search_button"
         android:layout_alignParentLeft="true"
-        android:layout_toStartOf="@+id/search_button"/>
+        android:layout_toStartOf="@+id/search_button">
+        <requestFocus/>
+    </EditText>
 
 </RelativeLayout>
