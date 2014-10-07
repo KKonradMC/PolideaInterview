@@ -21,8 +21,19 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode
-public class Question {
+public class Question implements CustomParcelable{
 
+    public final static Parcelable.Creator<Question> CREATOR = new Parcelable.Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel source) {
+            return new Question(source);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
     public static final String ACCEPTED_ANSWER_ID = "accepted_answer_id";
     public static final String ANSWER_COUNT = "answer_count";
     public static final String BOUNTY_AMOUNT = "bounty_amount";
@@ -134,5 +145,76 @@ public class Question {
     @Setter
     @JsonProperty(VIEW_COUNT)
     private Integer mViewCount;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    private Question(Parcel source){
+
+        final int acceptedAnswerId = source.readInt();
+        mAcceptedAnswerId = acceptedAnswerId != EMPTY_INT ? acceptedAnswerId : null;
+        final int answerCount = source.readInt();
+        mAnswerCount = answerCount != EMPTY_INT ? answerCount : null;
+        final int bountyAmount = source.readInt();
+        mBountyAmount = bountyAmount != EMPTY_INT ? bountyAmount : null;
+        final long bountyClosesData = source.readLong();
+        mBountyClosesDate =bountyClosesData != EMPTY_INT ? new Date(bountyClosesData) : null;
+        final long closedData = source.readLong();
+        mClosedDate =closedData != EMPTY_INT ? new Date(closedData) : null;
+        mClosedReason = source.readString();
+        final long communityOwnedDate = source.readLong();
+        mCommunityOwedDate =communityOwnedDate != EMPTY_INT ? new Date(communityOwnedDate) : null;
+        final long createDate = source.readLong();
+        mCreationDate =createDate != EMPTY_INT ? new Date(createDate) : null;
+        mAnswered = source.readByte() == TRUE;
+        final long lastActivityDate = source.readLong();
+        mLastActivityDate =lastActivityDate != EMPTY_INT ? new Date(lastActivityDate) : null;
+        final long lastEditDate = source.readLong();
+        mLastEditDate =lastEditDate != EMPTY_INT ? new Date(lastEditDate) : null;
+        mLink = source.readString();
+        final long lockedDate = source.readLong();
+        mLockedDate =lockedDate != EMPTY_INT ? new Date(lockedDate) : null;
+        mMigratedFrom = source.readString();
+        mMigratedTo = source.readString();
+        final long protectedDate = source.readLong();
+        mProtectedDate =protectedDate != EMPTY_INT ? new Date(protectedDate) : null;
+        final int questionId = source.readInt();
+        mQuestionId = questionId != EMPTY_INT ? questionId : null;
+        final int score = source.readInt();
+        mScore = score != EMPTY_INT ? score : null;
+        mTags = source.readArrayList(String.class.getClassLoader());
+        mTitle = source.readString();
+        final int viewCount = source.readInt();
+        mViewCount = viewCount != EMPTY_INT ? viewCount : null;
+        mOwner = source.readParcelable(ShallowUser.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mAcceptedAnswerId != null ? mAcceptedAnswerId : EMPTY_INT);
+        dest.writeInt(mAnswerCount != null ? mAnswerCount : EMPTY_INT);
+        dest.writeInt(mBountyAmount != null ? mBountyAmount : EMPTY_INT);
+        dest.writeLong(mBountyClosesDate != null ? mBountyClosesDate.getTime() : EMPTY_INT);
+        dest.writeLong(mClosedDate != null ? mClosedDate.getTime() : EMPTY_INT);
+        dest.writeString(mClosedReason);
+        dest.writeLong(mCommunityOwedDate != null ? mCommunityOwedDate.getTime() : EMPTY_INT);
+        dest.writeLong(mCreationDate != null ? mCreationDate.getTime() : EMPTY_INT);
+        dest.writeByte(mAnswered ? TRUE : FALSE);
+        dest.writeLong(mLastActivityDate != null ? mLastActivityDate.getTime() : EMPTY_INT);
+        dest.writeLong(mLastEditDate != null ? mLastEditDate.getTime() : EMPTY_INT);
+        dest.writeString(mLink);
+        dest.writeLong(mLockedDate != null ? mLockedDate.getTime() : EMPTY_INT);
+        dest.writeString(mMigratedFrom);
+        dest.writeString(mMigratedTo);
+        dest.writeLong(mProtectedDate != null ? mProtectedDate.getTime() : EMPTY_INT);
+        dest.writeInt(mQuestionId != null ? mQuestionId : EMPTY_INT);
+        dest.writeInt(mScore != null ? mScore : EMPTY_INT);
+        dest.writeList(mTags);
+        dest.writeString(mTitle);
+        dest.writeInt(mViewCount != null ? mViewCount : EMPTY_INT);
+        dest.writeParcelable(mOwner, 0);
+    }
 
 }
