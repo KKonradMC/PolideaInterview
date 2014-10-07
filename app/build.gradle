@@ -1,4 +1,15 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.2'
+    }
+}
 
 android {
     compileSdkVersion 20
@@ -6,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "org.kkonrad.polideainterview"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 20
         versionCode 1
         versionName "1.0"
@@ -19,10 +30,20 @@ android {
     }
 }
 
+apt{
+    arguments{
+        androidManifestFile variant.processResources.manifestFile
+        resourcePackageName "org.kkonrad.polideainterview"
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    apt "org.androidannotations:androidannotations:3.1+"
+    compile 'org.androidannotations:androidannotations-api:3.1'
     compile 'com.android.support:support-v4:20+'
     compile 'com.android.support:appcompat-v7:20.+'
-    compile "org.androidannotations:androidannotations:3.0+"
+
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.2.1'
 
 }
