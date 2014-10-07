@@ -4,4 +4,6 @@
     <string name="app_name">Polidea Interview</string>
     <string name="search">Wyszukaj</string>
     <string name="field_cant_be_empty">Pole nie moźe być puste.</string>
+    <string name="empty_result">Brak rezultatów.</string>
+    <string name="sth_was_wrong">Coś poszło nie tak.</string>
 </resources>

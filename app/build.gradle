@@ -28,6 +28,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
+    packagingOptions {
+        exclude 'LICENSE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+    }
 }
 
 apt{
@@ -35,14 +45,25 @@ apt{
         androidManifestFile variant.processResources.manifestFile
         resourcePackageName "org.kkonrad.polideainterview"
     }
+    dependencies{
+        provided "org.projectlombok:lombok:1.14.8"
+        apt "org.projectlombok:lombok:1.14.8"
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     apt "org.androidannotations:androidannotations:3.1+"
+    compile 'com.jakewharton.timber:timber:2.4.+'
     compile 'org.androidannotations:androidannotations-api:3.1'
     compile 'com.android.support:support-v4:20+'
     compile 'com.android.support:appcompat-v7:20.+'
+    compile 'com.intellij:annotations:+'
+    compile 'org.projectlombok:lombok:1.14.8'
+    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.+'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.4.+'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.+'
 
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.2.1'
 

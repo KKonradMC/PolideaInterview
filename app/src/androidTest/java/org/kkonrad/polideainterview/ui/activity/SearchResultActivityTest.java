@@ -1,6 +1,9 @@
 package org.kkonrad.polideainterview.ui.activity;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.EditText;
 
@@ -45,10 +48,36 @@ public class SearchResultActivityTest extends ActivityInstrumentationTestCase2<S
         final String errorMessage = getActivity().getString(R.string.field_cant_be_empty);
         final EditText editText = ((EditText) mSolo.getView(R.id.search_field));
         assertEquals(errorMessage, editText.getError());
-        
+
         mSolo.sleep(2000);
         mSolo.enterText(editText, "java");
         assertEquals(null, editText.getError());
+    }
+
+    public void testFullScenario(){
+        final String message = getActivity().getString(R.string.search);
+        final EditText editText = (EditText) mSolo.getView(R.id.search_field);
+        mSolo.enterText(editText, "java");
+        mSolo.clickOnButton(message);
+
+        if(isOnline()) {
+
+        }else{
+            final String errorMessage = getActivity().getString(R.string.sth_was_wrong);
+            mSolo.waitForText(errorMessage);
+            mSolo.assertCurrentActivity("Wrong activity", SearchActivity_.class);
+        }
+        mSolo.sleep(2000);
+    }
+
+    private boolean isOnline() {
+        final ConnectivityManager cm =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
     }
 
 

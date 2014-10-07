@@ -19,12 +19,21 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.api.rest.RestErrorHandler;
 import org.kkonrad.polideainterview.R;
+import org.kkonrad.polideainterview.model.QuestionList;
+import org.kkonrad.polideainterview.rest.SearchRestClient;
+import org.springframework.core.NestedRuntimeException;
+import org.springframework.web.client.RestClientException;
+
+import timber.log.Timber;
 
 @EFragment(R.layout.fragment_search)
 public class SearchFragment extends Fragment {
 
     @ViewById(R.id.search_field)
     protected EditText mSearchField;
+
+    @RestService
+    protected SearchRestClient mSearchRestClient;
 
     @AfterViews
     protected  void prepareSearchFiled(){
@@ -38,6 +47,17 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    @AfterInject
+    protected void setErrorHandler(){
+        mSearchRestClient.setRestErrorHandler(new RestErrorHandler() {
+
+            @Override
+            public void onRestClientExceptionThrown(NestedRuntimeException e) {
+                Timber.e(e, "Rest error :");
+                saveShowToastInUiThread(R.string.sth_was_wrong);
+            }
+        });
+    }
 
     @Click(R.id.search_button)
     protected void onSearchButtonClick(){
@@ -45,12 +65,35 @@ public class SearchFragment extends Fragment {
         if(searchText.length() == 0){
             mSearchField.setError(getString(R.string.field_cant_be_empty));
         }else{
+            searchOnStackOverFlow(searchText);
+        }
+    }
 
+    @Background
+    protected void searchOnStackOverFlow(String searchText){
+        final QuestionList questionList = mSearchRestClient.getPostsByTitle(searchText);
+        if(questionList != null && questionList.countItems() != 0) {
+            Timber.i("QuestionList object:", questionList.toString());
+        }else {
+            saveShowToastInUiThread(R.string.empty_result);
         }
     }
 
 
-    private static abstract class TextWatcherAdapter implements TextWatcher {
+    private void saveShowToastInUiThread(int messageRes){
+        final Activity activity = getActivity();
+        if(activity != null && !activity.isFinishing()) {
+            showToastInUiThread(messageRes);
+        }
+    }
+
+    @UiThread
+    public void showToastInUiThread(int messageRes){
+        Toast.makeText(getActivity(), messageRes, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private static abstract class TextWatcherAdapter implements TextWatcher{
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             //do nothing
@@ -67,4 +110,5 @@ public class SearchFragment extends Fragment {
         }
     }
 }
+
 
